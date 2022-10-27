@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DBLOCAL_CONNECTION', 'mysql_local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +43,7 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
         ],
 
-        'mysql_local' => [
+        'dblocal' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DBLOCAL_HOST', '127.0.0.1'),
@@ -63,7 +63,7 @@ return [
             ]) : [],
         ],
 
-        'mysql_cloud' => [
+        'dbcloud' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DBCLOUD_HOST', '127.0.0.1'),

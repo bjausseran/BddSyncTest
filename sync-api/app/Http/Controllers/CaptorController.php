@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Captor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+
 
 class CaptorController extends Controller
 {
-    private string localDbName = "mysql_local";
-    private string cloudDbName = "mysql_cloud";
     /**
      * Display a listing of the resource.
      *
@@ -17,20 +17,10 @@ class CaptorController extends Controller
      */
     public function index()
     {
-        DB::connection(env("DBCLOUD_NAME"))->table("captors")->get();
-        DB::connection(env("DBLOCAL_NAME"))->table("captors")->get();
-        $captor = Captor::paginate();
+        $dbcloud = "dbcloud";
+        $dblocal = "dblocal";
+        $captor = DB::connection($dblocal)->table("captor")->paginate();
         return $captor;
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,16 +31,20 @@ class CaptorController extends Controller
      */
     public function store(Request $request)
     {
+        $dbcloud = "dbcloud";
+        $dblocal = "dblocal";
+
         $inputs = $request->except('_token');
         $captor = new Captor();
         foreach($inputs as $key => $value) 
         {
             $captor->$key = $value;
         }
-        $captor->inventory_id = $count +1;
-        $captor->save();
-        return $captor;
+        $captor->uid = decbin(ord(Str::orderedUuid()));
+        DB::connection($dblocal)->table("captor")->insert($captor->toArray());
+        DB::connection($dbcloud)->table("captor")->insert($captor->toArray());
 
+        return $captor;
     }
 
     /**
@@ -59,20 +53,36 @@ class CaptorController extends Controller
      * @param  \App\Models\Captor  $captor
      * @return \Illuminate\Http\Response
      */
-    public function show(Captor $captor)
+    public function show($captorid)
     {
-        return $captor;
-    }
+        $dbcloud = "dbcloud";
+        $dblocal = "dblocal";
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Captor  $captor
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Captor $captor)
+        $captor = DB::connection($dblocal)->select('select * from captor where id = :id', ['id' => $captorid]);
+        return $captor;
+
+        //return $captor;
+    }
+    
+    public function check($captorid)
     {
-        //
+        $dbcloud = "dbcloud";
+        $dblocal = "dblocal";
+
+        $captorLocal = DB::connection($dblocal)->select('select * from captor where id = :id', ['id' => $captorid]);
+        $captorCloud = DB::connection($dbcloud)->select('select * from captor where id = :id', ['id' => $captorid]);
+
+        $isSame['is the same ?'] = $captorCloud[0]->name === $captorLocal[0]->name&& 
+        $captorCloud[0]->client_id === $captorLocal[0]->client_id && 
+        $captorCloud[0]->value_int === $captorLocal[0]->value_int && 
+        $captorCloud[0]->value_bool === $captorLocal[0]->value_bool;
+
+        $isSame['Local captor'] = $captorLocal[0];
+        $isSame['Cloud captor'] = $captorCloud[0];
+
+        return $isSame;
+
+        //return $captor;
     }
 
     /**

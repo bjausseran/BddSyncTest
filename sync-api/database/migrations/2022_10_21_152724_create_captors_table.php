@@ -13,7 +13,7 @@ class CreateCaptorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('captors', function (Blueprint $table) {
+        Schema::create('captor', function (Blueprint $table) {
             $table->uuid('id');
             $table->string('client_id');
             $table->string('name');

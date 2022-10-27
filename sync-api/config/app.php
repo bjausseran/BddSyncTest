@@ -15,43 +15,6 @@ return [
 
     'name' => env('APP_NAME', 'Laravel'),
     
-    
-    'mysql_local' => [
-        'read' => [
-            'host' => '127.0.0.1',
-        ],
-        'write' => [
-            'host' => '127.0.0.1'
-        ],
-        'driver'    => 'mysql',
-        'port'    => '3306',
-        'database'  => 'AiLuxDB',
-        'username'  => 'root',
-        'password'  => 'password',
-        'charset'   => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix'    => '',
-    ],
-
-    
-    
-    'mysql_cloud' => [
-        'read' => [
-            'host' => '127.0.0.1',
-        ],
-        'write' => [
-            'host' => '127.0.0.1'
-        ],
-        'driver'    => 'mysql',
-        'port'    => '3307',
-        'database'  => 'AiLuxDB',
-        'username'  => 'root',
-        'password'  => 'password',
-        'charset'   => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix'    => '',
-    ],
-
     /*
     |--------------------------------------------------------------------------
     | Application Environment
