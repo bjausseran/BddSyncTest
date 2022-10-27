@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Captor;
+use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class CaptorController extends Controller
+class UserController extends Controller
 {
-    private string localDbName = "mysql_local";
-    private string cloudDbName = "mysql_cloud";
     /**
      * Display a listing of the resource.
      *
@@ -17,10 +14,8 @@ class CaptorController extends Controller
      */
     public function index()
     {
-        DB::connection(env("DBCLOUD_NAME"))->table("captors")->get();
-        DB::connection(env("DBLOCAL_NAME"))->table("captors")->get();
-        $captor = Captor::paginate();
-        return $captor;
+        $user = User::paginate();
+        return $user;
     }
 
     /**
@@ -42,35 +37,35 @@ class CaptorController extends Controller
     public function store(Request $request)
     {
         $inputs = $request->except('_token');
-        $captor = new Captor();
+        $user = new User();
         foreach($inputs as $key => $value) 
         {
-            $captor->$key = $value;
+            $user->$key = $value;
         }
-        $captor->inventory_id = $count +1;
-        $captor->save();
-        return $captor;
+        $user->inventory_id = $count +1;
+        $user->save();
+        return $user;
 
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Captor  $captor
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function show(Captor $captor)
+    public function show(User $user)
     {
-        return $captor;
+        return $user;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Captor  $captor
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Captor $captor)
+    public function edit(User $user)
     {
         //
     }
@@ -79,30 +74,30 @@ class CaptorController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Captor  $captor
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Captor $captor)
+    public function update(Request $request, User $user)
     {
         $inputs = $request->except('_token', '_method');
         foreach($inputs as $key => $value)
         {
-            $captor->$key = $value;
+            $user->$key = $value;
         }
-        $captor->save();
-        return $captor;
+        $user->save();
+        return $user;
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Captor  $captor
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Captor $captor)
+    public function destroy(User $user)
     {
-        $captor->delete();
+        $user->delete();
         return response()->json();
     }
 }
