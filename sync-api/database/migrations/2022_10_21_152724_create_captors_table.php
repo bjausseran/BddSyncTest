@@ -15,6 +15,10 @@ class CreateCaptorsTable extends Migration
     {
         Schema::create('captors', function (Blueprint $table) {
             $table->uuid('id');
+            $table->string('client_id');
+            $table->string('name');
+            $table->int('value_int');
+            $table->bool('value_bool');
             $table->timestamps();
         });
     }

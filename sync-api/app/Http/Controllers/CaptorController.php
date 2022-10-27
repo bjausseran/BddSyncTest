@@ -14,7 +14,8 @@ class CaptorController extends Controller
      */
     public function index()
     {
-        //
+        $captor = Captor::paginate();
+        return $captor;
     }
 
     /**
@@ -35,7 +36,16 @@ class CaptorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $inputs = $request->except('_token');
+        $captor = new Captor();
+        foreach($inputs as $key => $value) 
+        {
+            $captor->$key = $value;
+        }
+        $captor->inventory_id = $count +1;
+        $captor->save();
+        return $captor;
+
     }
 
     /**
@@ -46,7 +56,7 @@ class CaptorController extends Controller
      */
     public function show(Captor $captor)
     {
-        //
+        return $captor;
     }
 
     /**
@@ -69,7 +79,14 @@ class CaptorController extends Controller
      */
     public function update(Request $request, Captor $captor)
     {
-        //
+        $inputs = $request->except('_token', '_method');
+        foreach($inputs as $key => $value)
+        {
+            $captor->$key = $value;
+        }
+        $captor->save();
+        return $captor;
+
     }
 
     /**
@@ -80,6 +97,7 @@ class CaptorController extends Controller
      */
     public function destroy(Captor $captor)
     {
-        //
+        $captor->delete();
+        return response()->json();
     }
 }
