@@ -1,8 +1,7 @@
 version: '3.3'
 services:
-  db:
+  db_cloud:
     image: mysql:5.7
-    restart: no
     environment:
       MYSQL_DATABASE: 'db cloud'
       # So you don't have to use root, but you can if you like

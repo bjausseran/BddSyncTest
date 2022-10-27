@@ -2,7 +2,6 @@ version: '3.3'
 services:
   syncapp:
     image: bitnami/laravel
-    restart: no
     working_dir: /var/www/
     environment:
       LOCAL_DATABASE: 'db local'
