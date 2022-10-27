@@ -14,17 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::apiResource('/captor', 'CaptorController');
-Route::apiResource('/client', 'ClientController');
+// Route::apiResource('/captor', 'CaptorController');
+// Route::apiResource('/client', 'ClientController');
 
 
 
 // here for test, should be deleted before export
-Route::get('/test', function(){
+Route::get('/', function(){
     return DB::connection(env("DBLOCAL_NAME"))->table("Captors")->get();
 });
 
