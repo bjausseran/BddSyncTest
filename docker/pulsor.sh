@@ -1,0 +1,1 @@
+curl -X GET docker-syncapi-1:80 -H "Accept: */*" 

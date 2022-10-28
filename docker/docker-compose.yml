@@ -1,10 +1,13 @@
 version: '3.3'
 services:
+
   db_local:
+    tty: true
     image: mysql:5.7
+    container_name: dblocal
     build: 
       context: .
-      dockerfile: dockerfile-local
+      dockerfile: dockerfile-db
     environment:
       MYSQL_DATABASE: 'dblocal'
       # So you don't have to use root, but you can if you like
@@ -13,70 +16,69 @@ services:
       MYSQL_PASSWORD: 'password'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'password'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3307:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      # Where our data will be persisted
     volumes:
-      - cloud-db:/var/lib/mysql
+      - local-db:/var/lib/mysql
       
   db_cloud:
+    tty: true
     image: mysql:5.7
+    container_name: dbcloud
     build: 
       context: .
-      dockerfile: dockerfile-cloud
+      dockerfile: dockerfile-db
     environment:
-      MYSQL_DATABASE: 'dbcloud'
+      MYSQL_DATABASE: 'dblocal'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: 'user'
       # You can use whatever password you like
       MYSQL_PASSWORD: 'password'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'password'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3307:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3307'
-      # Where our data will be persisted
     volumes:
-      - local-db:/var/lib/mysql
-
-  sync_app:
+      - cloud-db:/var/lib/mysql
+      
+  syncapi:
+    tty: true
     image: bitnami/laravel
+    container_name: api
     build: 
       context: .
       dockerfile: dockerfile-laravel
     working_dir: /var/www/
+    ports:
+      - "8080:8080"
     environment:
-      LOCAL_DATABASE: 'db local'
-      LOCAL_PORT: 3306
-      DISTANT_DATABASE: 'db cloud'
-      DISTANT_PORT: 3307
+      LOCAL_DATABASE: 'dblocal'
+      DISTANT_DATABASE: 'dbcloud'
       # So you don't have to use root, but you can if you like
       MYSQL_USER: 'user'
       # You can use whatever password you like
       MYSQL_PASSWORD: 'password'
       # Password for root access
       MYSQL_ROOT_PASSWORD: 'password'
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - '3305:3306'
-    expose:
-      # Opens port 3306 on the container
-      - '3306'
-      - '3307'
-      - '3305'
       # Where our data will be persisted
     volumes:
       - syncapp:/var/www
-
+      
+  pulsor:
+    tty: true
+    image: ubuntu
+    container_name: pulsor
+    ports:
+      - "8082:8082"
+    build: 
+      context: .
+      dockerfile: dockerfile-pulsor
+    environment:
+      LOCAL_DATABASE: 'db_local'
+      DISTANT_DATABASE: 'db_cloud'
+      API: 'syncapi'
+    volumes:
+      - pulsor:/var/www
+            
 # Names our volume
 volumes:
-  syncapp:
   local-db: 
   cloud-db: 
+  syncapp: 
+  pulsor: 
