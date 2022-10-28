@@ -1,6 +1,7 @@
 FROM ubuntu:20.04
 
 # Variables d'environnement
+ENV MYSQL_PORT: 3007
 ENV MYSQL_DATABASE: 'dbcloud'
       # So you don't have to use root, but you can if you like
 ENV MYSQL_USER: 'root'
@@ -24,7 +25,7 @@ RUN apt-get update
 RUN apt-get install -y mysql-shell
 RUN service mysql start -u MYSQL_USER
 RUN mysql -u MYSQL_USER
-RUN GRANT ALL PRIVILEGES ON *.* TO MYSQL_USER@localhost:3307 IDENTIFIED BY MYSQL_PASSWORD;
+RUN GRANT ALL PRIVILEGES ON *.* TO MYSQL_USER@localhost:MYSQL_PORT IDENTIFIED BY MYSQL_PASSWORD;
 RUN \q
 RUN mysql -u MYSQL_USER -p
 RUN CREATE SCHEMA MYSQL_DATABASE; CREATE TABLE MYSQL_DATABASE.captor (uid binary(16) NOT NULL, client_id binary(16) NOT NULL, name VARCHAR(255) NOT NULL, value_int INT, value_bool TINYINT, UNIQUE INDEX id_UNIQUE (uid ASC));
