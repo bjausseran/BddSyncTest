@@ -1,7 +1,7 @@
 # BddSyncTest
 
-BDD :
-    Probleme pour se connecter au serveur mysql et créer la base depuis le .sh
+BDD : done
 
-Pulsor :
-    Parvient a ping l'api mais pas à curl
+API : Move sync-api to var/www/
+
+Pulsor : Parvient a ping l'api mais pas à curl

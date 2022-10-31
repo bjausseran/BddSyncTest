@@ -1,6 +1,7 @@
-FROM php:7.4-fpm
 
-# Arguments defined in docker-compose.yml
+FROM php:7.4-fpm as build
+
+# Arguments defined in docker-compose.yml (not really bruh)
 ARG user
 ARG uid
 
@@ -28,9 +29,25 @@ RUN useradd -G www-data,root -u 1000 -d /home/user user
 RUN mkdir -p /home/user/.composer && \
     chown -R user:user /home/user
 
+COPY sync-api/README.md /var/www/sync-api/README.md
+#COPY docker/set_up_api.sh /root/set_up_api.sh
+
+
+# Run necessary services
+#RUN chmod u+x set_up_api.sh
+#ENTRYPOINT ["/bin/bash", "/root/set_up_api.sh"]
+
+#COPY /sync-api/ /var/www/sync-api/
+
 # Set working directory
-WORKDIR /var/www
+#WORKDIR /root
+#RUN git clone https://github.com/bjausseran/BddSyncTest.git \
+#    && mv /root/BddSyncTest/sync-api /var/www/sync-api
 
-RUN git clone https://github.com/bjausseran/BddSyncTest.git
+    
+#WORKDIR /var/www/sync-api
 
-USER user
+#FROM ubuntu:18.04 as build2
+#COPY --from=build /root/BddSyncTest/sync-api/ /var/www/sync-api/
+
+#USER user
