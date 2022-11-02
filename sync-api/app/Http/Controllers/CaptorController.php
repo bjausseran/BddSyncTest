@@ -74,13 +74,15 @@ class CaptorController extends Controller
         $captorLocal = DB::connection($dblocal)->select('select * from captor where uid = :uid', ['uid' => $captorid]);
         $captorCloud = DB::connection($dbcloud)->select('select * from captor where uid = :uid', ['uid' => $captorid]);
 
-        $isSame['is the same ?'] = $captorCloud[0]->name === $captorLocal[0]->name && 
+        if(count($captorCloud) === 0 || count($captorLocal) === 0) return "captor not found on cloud or local";
+
+        $isSame['check'] = $captorCloud[0]->name === $captorLocal[0]->name && 
         $captorCloud[0]->client_id === $captorLocal[0]->client_id && 
         $captorCloud[0]->value_int === $captorLocal[0]->value_int && 
         $captorCloud[0]->value_bool === $captorLocal[0]->value_bool;
 
-        $isSame['Local captor'] = $captorLocal[0];
-        $isSame['Cloud captor'] = $captorCloud[0];
+        $isSame['Local'] = $captorLocal[0];
+        $isSame['Cloud'] = $captorCloud[0];
 
         return $isSame;
 

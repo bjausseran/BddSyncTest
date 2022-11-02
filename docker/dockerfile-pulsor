@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 # Install system dependencies
-RUN apt-get update && apt-get -qq -y install curl && apt-get install -y telnet
+RUN apt-get update && apt-get -qq -y install curl && apt install -y jq
 
 WORKDIR /home/
 COPY /pulsor.sh /home/pulsor.sh

@@ -7,6 +7,7 @@ source /etc/apache2/envvars
 
 
 su user
+export COMPOSER_HOME="$HOME/.config/composer";
 cd /var/www/
 composer install
 php artisan key:generate

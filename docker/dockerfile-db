@@ -12,16 +12,15 @@ RUN apt-get update \
 && apt-get install -y gnupg \
 && dpkg -i mysql-apt-config_0.8.24-1_all.deb \
 && apt-get update \
-&& apt-get install -y mysql-shell
+&& apt-get install -y mysql-shell \
+&& apt-get -qq -y install curl
 
 WORKDIR /root
 
 
 COPY /set_up_db.sh /root/set_up_db.sh
-#COPY /start_db.sh /root/start_db.sh
 
 RUN chmod u+x set_up_db.sh
-# && chmod u+x start_db.sh
   
 
 #CMD service mysql start
@@ -29,7 +28,8 @@ RUN chmod u+x set_up_db.sh
 
 # Run necessary services
 RUN ["/bin/bash", "/root/set_up_db.sh"]
-#RUN ["/bin/bash", /root/start_db.sh]
 
-#ENTRYPOINT service mysql start
-# CMD mysql -uroot
+WORKDIR /home
+COPY /start_db.sh /home/start_db.sh
+RUN chmod u+x start_db.sh
+ENTRYPOINT ["/bin/bash", "/home/start_db.sh"]

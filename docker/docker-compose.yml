@@ -9,6 +9,11 @@ services:
     build: 
       context: .
       dockerfile: dockerfile-db
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "db_local"]
+        interval: 1s
+        timeout: 1s
+        retries: 10
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: 'AirLuxDB'
@@ -30,6 +35,11 @@ services:
     build: 
       context: .
       dockerfile: dockerfile-db
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "db_cloud"]
+        interval: 1s
+        timeout: 1s
+        retries: 10
     environment:
       MYSQL_ROOT_HOST: '%'
       MYSQL_DATABASE: 'AirLuxDB'
@@ -48,6 +58,16 @@ services:
     container_name: syncapi
     networks:
       - iotnetwork
+    depends_on:
+      db_cloud:
+        condition: service_healthy
+      db_local:
+        condition: service_healthy
+    healthcheck:
+        test: "curl -f http://syncapi/api/captor/:80"
+        interval: 2s
+        timeout: 2s
+        retries: 10
     build: 
       context: ./..
       dockerfile: docker/dockerfile-laravel
@@ -76,6 +96,9 @@ services:
     container_name: pulsor
     networks:
       - iotnetwork
+    depends_on:
+      syncapi:
+        condition: service_healthy
     build: 
       context: .
       dockerfile: dockerfile-pulsor
