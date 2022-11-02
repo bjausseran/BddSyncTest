@@ -22,7 +22,9 @@ Route::apiResource('/captor', 'CaptorController')->only(['index', 'store', 'show
 // Route::apiResource('/client', 'ClientController');
 
 Route::get('/captor/check/{captorid}', 'CaptorController@check');
-
+Route::get('/', function(){
+     return "home";
+});
 
 // here for test, should be deleted before export
 // Route::get('/', function(){

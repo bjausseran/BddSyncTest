@@ -14,12 +14,22 @@ RUN apt-get update \
 && apt-get update \
 && apt-get install -y mysql-shell
 
-COPY /set_up_base.sh /root/set_up_base.sh
 WORKDIR /root
 
-# Run necessary services
-RUN chmod u+x set_up_base.sh
-RUN ["/bin/bash", "/root/set_up_base.sh"]
 
-# CMD service mysql start
+COPY /set_up_db.sh /root/set_up_db.sh
+#COPY /start_db.sh /root/start_db.sh
+
+RUN chmod u+x set_up_db.sh
+# && chmod u+x start_db.sh
+  
+
+#CMD service mysql start
+
+
+# Run necessary services
+RUN ["/bin/bash", "/root/set_up_db.sh"]
+#RUN ["/bin/bash", /root/start_db.sh]
+
+#ENTRYPOINT service mysql start
 # CMD mysql -uroot

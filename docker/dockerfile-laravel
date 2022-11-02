@@ -1,5 +1,5 @@
 
-FROM php:7.4-fpm as build
+FROM php:7.4.1-apache
 
 # Arguments defined in docker-compose.yml (not really bruh)
 ARG user
@@ -26,28 +26,24 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Create system user to run Composer and Artisan Commands
 RUN useradd -G www-data,root -u 1000 -d /home/user user
-RUN mkdir -p /home/user/.composer && \
-    chown -R user:user /home/user
+RUN mkdir -p /home/user/.composer \ 
+    && chown -R user:user /home/user
 
-COPY sync-api/README.md /var/www/sync-api/README.md
-#COPY docker/set_up_api.sh /root/set_up_api.sh
+WORKDIR /var/www/sync-api
+COPY sync-api/ /var/www/
 
-
+COPY docker/set_up_api.sh /root/set_up_api.sh
+COPY docker/vhost.conf /etc/apache2/sites-available/000-default.conf
+WORKDIR /root
 # Run necessary services
-#RUN chmod u+x set_up_api.sh
-#ENTRYPOINT ["/bin/bash", "/root/set_up_api.sh"]
-
-#COPY /sync-api/ /var/www/sync-api/
-
-# Set working directory
-#WORKDIR /root
-#RUN git clone https://github.com/bjausseran/BddSyncTest.git \
-#    && mv /root/BddSyncTest/sync-api /var/www/sync-api
-
-    
-#WORKDIR /var/www/sync-api
-
-#FROM ubuntu:18.04 as build2
-#COPY --from=build /root/BddSyncTest/sync-api/ /var/www/sync-api/
+RUN chmod u+x set_up_api.sh \
+    && chown -R www-data:www-data /var/www \
+    && a2enmod rewrite
+RUN ["/bin/bash", "/root/set_up_api.sh"]
 
 #USER user
+#COPY /sync-api/ /var/www/sync-api/
+
+    
+# Set working directory
+#WORKDIR /root

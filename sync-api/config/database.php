@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('DBLOCAL_CONNECTION', 'mysql_local'),
+    'default' => env('DB_CONNECTION', 'dblocal'),
 
     /*
     |--------------------------------------------------------------------------
@@ -47,10 +47,10 @@ return [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DBLOCAL_HOST', '127.0.0.1'),
-            'port' => env('DBLOCAL_PORT', '3306'),
-            'database' => env('DBLOCAL_DATABASE', 'forge'),
-            'username' => env('DBLOCAL_USERNAME', 'forge'),
-            'password' => env('DBLOCAL_PASSWORD', ''),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
@@ -67,10 +67,10 @@ return [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
             'host' => env('DBCLOUD_HOST', '127.0.0.1'),
-            'port' => env('DBCLOUD_PORT', '3307'),
-            'database' => env('DBCLOUD_DATABASE', 'forge'),
-            'username' => env('DBCLOUD_USERNAME', 'forge'),
-            'password' => env('DBCLOUD_PASSWORD', ''),
+            'port' => env('DB_PORT', '3306'),
+            'database' => env('DB_DATABASE', 'forge'),
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',

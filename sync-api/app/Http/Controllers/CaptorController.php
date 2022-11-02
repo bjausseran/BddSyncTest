@@ -19,7 +19,8 @@ class CaptorController extends Controller
     {
         $dbcloud = "dbcloud";
         $dblocal = "dblocal";
-        $captor = DB::connection($dblocal)->table("captor")->paginate();
+        $captor = DB::connection($dblocal)->table("captor")->get();
+        //$captor = Captor::paginate();
         return $captor;
     }
 
@@ -40,7 +41,8 @@ class CaptorController extends Controller
         {
             $captor->$key = $value;
         }
-        $captor->uid = decbin(ord(Str::orderedUuid()));
+        #$captor->uid = decbin(ord(Str::orderedUuid()));
+        $captor->uid = uniqid('', true);
         DB::connection($dblocal)->table("captor")->insert($captor->toArray());
         DB::connection($dbcloud)->table("captor")->insert($captor->toArray());
 
@@ -58,7 +60,7 @@ class CaptorController extends Controller
         $dbcloud = "dbcloud";
         $dblocal = "dblocal";
 
-        $captor = DB::connection($dblocal)->select('select * from captor where id = :id', ['id' => $captorid]);
+        $captor = DB::connection($dblocal)->select('select * from captor where uid = :uid', ['uid' => $captorid]);
         return $captor;
 
         //return $captor;
@@ -69,10 +71,10 @@ class CaptorController extends Controller
         $dbcloud = "dbcloud";
         $dblocal = "dblocal";
 
-        $captorLocal = DB::connection($dblocal)->select('select * from captor where id = :id', ['id' => $captorid]);
-        $captorCloud = DB::connection($dbcloud)->select('select * from captor where id = :id', ['id' => $captorid]);
+        $captorLocal = DB::connection($dblocal)->select('select * from captor where uid = :uid', ['uid' => $captorid]);
+        $captorCloud = DB::connection($dbcloud)->select('select * from captor where uid = :uid', ['uid' => $captorid]);
 
-        $isSame['is the same ?'] = $captorCloud[0]->name === $captorLocal[0]->name&& 
+        $isSame['is the same ?'] = $captorCloud[0]->name === $captorLocal[0]->name && 
         $captorCloud[0]->client_id === $captorLocal[0]->client_id && 
         $captorCloud[0]->value_int === $captorLocal[0]->value_int && 
         $captorCloud[0]->value_bool === $captorLocal[0]->value_bool;
