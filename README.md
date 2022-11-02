@@ -1,7 +1,10 @@
 # BddSyncTest
 
-BDD : done
-
-API : Move sync-api to var/www/
-
-Pulsor : Parvient a ping l'api mais pas à curl
+```
+git clone https://github.com/bjausseran/BddSyncTest.git
+cd BddSyncTest/docker
+docker compose build
+docker compose up
+#test again
+docker compose up pulsor
+```
