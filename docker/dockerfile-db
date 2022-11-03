@@ -13,6 +13,7 @@ RUN apt-get update \
 && dpkg -i mysql-apt-config_0.8.24-1_all.deb \
 && apt-get update \
 && apt-get install -y mysql-shell \
+&& apt-get install coreutils \
 && apt-get -qq -y install curl
 
 WORKDIR /root
@@ -33,3 +34,5 @@ WORKDIR /home
 COPY /start_db.sh /home/start_db.sh
 RUN chmod u+x start_db.sh
 ENTRYPOINT ["/bin/bash", "/home/start_db.sh"]
+
+ #CMD ["tail", "/dev/null"]

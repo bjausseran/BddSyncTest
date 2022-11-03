@@ -41,10 +41,52 @@ class CaptorController extends Controller
         {
             $captor->$key = $value;
         }
-        #$captor->uid = decbin(ord(Str::orderedUuid()));
         $captor->uid = uniqid('', true);
-        DB::connection($dblocal)->table("captor")->insert($captor->toArray());
-        DB::connection($dbcloud)->table("captor")->insert($captor->toArray());
+        $captor['isSync']=true;
+
+        try 
+        {
+            DB::connection($dbcloud)->getPdo();
+            $unsyncCaptors = DB::connection($dblocal)->select('select * from captor where isSync = :isSync', ['isSync' => false]);
+
+            // foreach ($unsyncCaptors as $unsyncCaptor) 
+            // {
+            //     return $unsyncCaptors->toArray();
+            //     $unsyncCaptor ['isSync']=true;
+            //     try
+            //     {
+            //         DB::connection($dbcloud)->table("captor")->insert($unsyncCaptor->toArray());
+            //         DB::connection($dblocal)->table("captor")->update(['isSync' => true]);
+            //     }
+            //     catch(QueryException $ex)
+            //     {
+            //         $captor['isSync']=false;
+            //     }
+            // }
+            try
+            {
+                DB::connection($dbcloud)->table("captor")->insert($captor->toArray());
+            }
+            catch(QueryException $ex)
+            {
+                $captor['isSync']=false;
+            }
+        } 
+        catch (\Exception $e) 
+        {
+            $captor['isSync']=false;
+        }
+
+        try
+        {
+            DB::connection($dblocal)->table("captor")->insert($captor->toArray());
+        }
+        catch(QueryException $ex)
+        {
+            return $ex;
+        }
+
+        
 
         return $captor;
     }
