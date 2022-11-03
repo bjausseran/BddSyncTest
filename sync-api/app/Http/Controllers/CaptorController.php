@@ -47,7 +47,7 @@ class CaptorController extends Controller
         try 
         {
             DB::connection($dbcloud)->getPdo();
-            $unsyncCaptors = DB::connection($dblocal)->select('select * from captor where isSync = :isSync', ['isSync' => false]);
+            #$unsyncCaptors = DB::connection($dblocal)->select('select * from captor where isSync = :isSync', ['isSync' => false]);
 
             // foreach ($unsyncCaptors as $unsyncCaptor) 
             // {

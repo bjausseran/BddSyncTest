@@ -31,6 +31,7 @@ RUN mkdir -p /home/user/.composer \
 
 WORKDIR /var/www/sync-api
 COPY sync-api/ /var/www/
+COPY sync-api/.env.example /var/www/.env
 
 COPY docker/set_up_api.sh /root/set_up_api.sh
 COPY docker/vhost.conf /etc/apache2/sites-available/000-default.conf
